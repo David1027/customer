@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2019-09-06 09:27:01
  */
 @RestController
-@RequestMapping("/manager/")
+@RequestMapping("/api/")
 @Api(tags = "ManagerController相关api")
 public class ManagerController {
   /** 服务对象 */
@@ -38,7 +38,7 @@ public class ManagerController {
    * @param managerView 实体对象
    * @return 新增结果
    */
-  @PostMapping("login")
+  @PostMapping("/manager/login")
   @ApiOperation("管理员登陆逻辑")
   public Result login(ManagerView managerView) {
     managerService.login(managerView);
@@ -52,10 +52,10 @@ public class ManagerController {
    * @param response 响应参数
    * @return Result返回结构
    */
-  @GetMapping("loginwechat")
+  @GetMapping("/manager/loginwechat")
   @ApiOperation("微信账号授权逻辑")
-  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response) {
-    managerService.loginWeChat(request, response);
+  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response,String name) {
+    managerService.loginWeChat(request, response,name);
     return ResultUtil.success();
   }
 
@@ -68,10 +68,26 @@ public class ManagerController {
    * @return Result返回结构
    * @throws IOException
    */
-  @GetMapping("logincustomer")
+  @GetMapping("/common/login/wechat/respon")
   @ApiOperation("微信账号登陆逻辑")
   public Object loginCustomer(String code, HttpSession session, HttpServletResponse response)
       throws IOException {
     return ResultUtil.success(managerService.loginCustomer(code));
+  }
+
+  /**
+   * 微信账号注册逻辑
+   *
+   * @param code 微信授权返回信息
+   * @param session
+   * @param response
+   * @return
+   * @throws IOException
+   */
+  @GetMapping("registercustomer")
+  @ApiOperation("微信账号注册逻辑")
+  public Object registerCustomer(String code, HttpSession session, HttpServletResponse response)
+      throws IOException {
+    return ResultUtil.success(managerService.registerCustomer(code));
   }
 }

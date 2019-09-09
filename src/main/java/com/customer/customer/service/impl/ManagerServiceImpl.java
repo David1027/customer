@@ -31,9 +31,9 @@ public class ManagerServiceImpl implements ManagerService {
   @Autowired private ManagerDao managerDao;
   @Autowired private CompangDao compangDao;
 
-  private static final String APP_ID = "wxb4290f6dcd6ef34e";
-  private static final String SECRET = "c4f17f04004dea83d670c02276dfe158";
-  private static final String REDIRECT_URI = "api/common/login/wechat/respon";
+  private static final String APP_ID = "wx61927abdbaee5455";
+  private static final String SECRET = "a2795c557cd97199ed6e6148276fd489";
+  private static final String REDIRECT_URI = "/api/common/login/wechat/respon";
 
   /**
    * 登陆逻辑
@@ -60,7 +60,7 @@ public class ManagerServiceImpl implements ManagerService {
     return "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
         + APP_ID
         + "&redirect_uri="
-        + REDIRECT_URI
+        + "https://www.shoeslogo.com/vW7s0cZNHmcN3c4i3P3hZZ.php"
         + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
   }
 
@@ -71,13 +71,32 @@ public class ManagerServiceImpl implements ManagerService {
    * @param response 响应参数
    */
   @Override
-  public void loginWeChat(HttpServletRequest request, HttpServletResponse response) {
+  public void loginWeChat(HttpServletRequest request, HttpServletResponse response,String name) {
     String url = getServiceConnectUri();
     try {
       response.sendRedirect(url);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * 获取accessToken
+   *
+   * @param code 微信授权返回信息
+   * @return AccessToken
+   * @throws IOException
+   */
+  public AccessToken getAccessToken(String code) throws IOException {
+    String url =
+        "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
+            + APP_ID
+            + "&secret="
+            + SECRET
+            + "&code="
+            + code
+            + "&grant_type=authorization_code";
+    return HttpRequestBuilder.create(url, "get").fetchStringContent(AccessToken.class);
   }
 
   /**
@@ -100,23 +119,25 @@ public class ManagerServiceImpl implements ManagerService {
     return result;
   }
 
-
   /**
-   * 获取accessToken
+   * 微信授权后的注册逻辑
    *
    * @param code 微信授权返回信息
-   * @return AccessToken
+   * @return
    * @throws IOException
    */
-  public AccessToken getAccessToken(String code) throws IOException {
-    String url =
-        "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
-            + APP_ID
-            + "&secret="
-            + SECRET
-            + "&code="
-            + code
-            + "&grant_type=authorization_code";
-    return HttpRequestBuilder.create(url, "get").fetchStringContent(AccessToken.class);
+  @Override
+  public WeChatResult registerCustomer(String code) throws IOException {
+    System.err.println("code=======>" + code);
+    String openid = getAccessToken(code).getOpenid();
+    Compang compang = compangDao.findByCompanyOpenid(openid);
+    WeChatResult result = new WeChatResult();
+    if (compang == null) {
+      result.setOpenid(openid);
+    } else {
+      result.setCode(true);
+      result.setCompanyId(compang.getId());
+    }
+    return result;
   }
 }

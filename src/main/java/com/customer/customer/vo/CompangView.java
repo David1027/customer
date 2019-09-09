@@ -21,6 +21,9 @@ public class CompangView {
   @ApiModelProperty(value = "主键")
   private Integer id;
 
+  @ApiModelProperty(value = "公司openid")
+  private String companyOpenid;
+
   @ApiModelProperty(value = "公司名称/姓名")
   private String companyName;
 

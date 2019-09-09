@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2019-09-05 16:17:20
  */
 @RestController
-@RequestMapping("/compang/")
+@RequestMapping("/api/compang/")
 @Api(tags = "CompangController相关api")
 public class CompangController {
   /** 服务对象 */
@@ -35,7 +35,7 @@ public class CompangController {
    */
   @PostMapping("save")
   @ApiOperation("新增中介公司")
-  public Result save(@RequestBody CompangView compangView) {
+  public Result save(CompangView compangView) {
     compangService.save(compangView);
     return ResultUtil.success();
   }

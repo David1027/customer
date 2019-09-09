@@ -29,7 +29,7 @@ public interface ManagerService {
    * @param request 请求参数
    * @param response 响应参数
    */
-  void loginWeChat(HttpServletRequest request, HttpServletResponse response);
+  void loginWeChat(HttpServletRequest request, HttpServletResponse response,String name);
 
   /**
    * 微信账号登陆逻辑
@@ -38,4 +38,13 @@ public interface ManagerService {
    * @throws IOException
    */
   WeChatResult loginCustomer(String code) throws IOException;
+
+  /**
+   * 微信账号注册逻辑
+   *
+   * @param code 微信授权返回信息
+   * @return
+   * @throws IOException
+   */
+  WeChatResult registerCustomer(String code) throws IOException;
 }

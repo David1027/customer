@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2019-09-05 16:17:20
  */
 @RestController
-@RequestMapping("/customer/")
+@RequestMapping("/api/customer/")
 @Api(tags = "CustomerController相关api")
 public class CustomerController {
   /** 服务对象 */
@@ -34,7 +34,7 @@ public class CustomerController {
    */
   @PostMapping("save")
   @ApiOperation("新增客户")
-  public Result save(@RequestBody CustomerView customerView) {
+  public Result save(CustomerView customerView) {
     customerService.save(customerView);
     return ResultUtil.success();
   }
@@ -47,7 +47,7 @@ public class CustomerController {
    */
   @PostMapping("update")
   @ApiOperation("编辑客户")
-  public Result update(@RequestBody CustomerView customerView) {
+  public Result update(CustomerView customerView) {
     customerService.update(customerView);
     return ResultUtil.success();
   }
