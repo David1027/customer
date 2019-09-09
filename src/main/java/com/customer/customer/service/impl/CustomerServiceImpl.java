@@ -89,6 +89,7 @@ public class CustomerServiceImpl implements CustomerService {
     Optional<Customer> customer = customerDao.findById(customerView.getId());
     customerView.setIsRegister(customerView.getCustomerRegisterImage() != null);
     customerView.setIsSign(customerView.getCustomerSignImage() != null);
+    customerView.setCreateTime(customer.get().getCreateTime());
     customerDao.save(customerMapper.modelMapperConfig(false).map(customerView, Customer.class));
   }
 
@@ -136,9 +137,10 @@ public class CustomerServiceImpl implements CustomerService {
     if (null == customerDao.getCustomer(id)) {
       throw new WebMessageException(ResultEnum.FAILED.getCode(), "这个[ " + id + " ]id对应的查询结果不存在");
     }
-    return customerMapper
-        .modelMapperConfig(true)
-        .map(customerDao.getCustomer(id), CustomerView.class);
+    CustomerView view =
+        customerMapper.modelMapperConfig(true).map(customerDao.getCustomer(id), CustomerView.class);
+    view.setCompanyName(compangDao.findById(view.getCompanyId()).get().getCompanyName());
+    return view;
   }
 
   /**
