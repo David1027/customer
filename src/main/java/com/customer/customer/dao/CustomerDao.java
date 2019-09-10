@@ -52,4 +52,6 @@ public interface CustomerDao
    * @return Integer
    */
   Integer countByCompanyIdAndAndIsSign(Integer companyId, boolean flag);
+
+  Integer countByCompanyId(Integer companyId);
 }

@@ -23,11 +23,11 @@ public class CustomerConfig extends WebMvcConfigurationSupport {
   public void addInterceptors(InterceptorRegistry registry) {
     registry
         .addInterceptor(customerInterceptor)
-        .addPathPatterns("/**")
-            .excludePathPatterns("/swagger-ui.html")
-            .excludePathPatterns("/swagger-resources/**")
-            .excludePathPatterns("/error")
-            .excludePathPatterns("/webjars/**");
+        .addPathPatterns("/api/compang/list")
+        .excludePathPatterns("/swagger-ui.html")
+        .excludePathPatterns("/swagger-resources/**")
+        .excludePathPatterns("/error")
+        .excludePathPatterns("/webjars/**");
   }
 
   @Override

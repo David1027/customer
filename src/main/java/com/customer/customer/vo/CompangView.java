@@ -42,4 +42,7 @@ public class CompangView {
 
   @ApiModelProperty(value = "签约数")
   private Integer signCount;
+
+  @ApiModelProperty(value = "客户数")
+  private Integer customerCount;
 }

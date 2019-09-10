@@ -13,13 +13,16 @@ import lombok.Data;
 @ApiModel("微信授权返回结果")
 public class WeChatResult {
 
-  /** 返回状态码 */
   @ApiModelProperty(value = "返回状态码")
   private boolean code;
-  /** openid */
+
   @ApiModelProperty(value = "openid")
   private String openid;
-  /** 公司id */
+
   @ApiModelProperty(value = "公司id")
   private Integer companyId;
+
+  @ApiModelProperty(value = "业务员名称")
+  private String salesName;
+
 }

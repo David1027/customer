@@ -1,10 +1,17 @@
 package com.customer.common.interceptor;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.beust.jcommander.internal.Nullable;
+import com.customer.common.enums.ResultEnum;
+import com.customer.common.exception.WebMessageException;
+import com.customer.customer.dao.ManagerDao;
+import com.customer.customer.entity.Manager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,13 +25,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Component
 public class CustomerInterceptor implements HandlerInterceptor {
 
+  @Autowired private ManagerDao managerDao;
+
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
-      System.out.println("preHandle");
-      System.out.println(((HandlerMethod) handler).getBean().getClass().getName());
-      System.out.println(((HandlerMethod) handler).getMethod().getName());
-      request.setAttribute("startTime", System.currentTimeMillis());
+    HttpSession session = request.getSession();
+    Manager login = (Manager) session.getAttribute("login");
+    if (login == null) {
+      throw new WebMessageException(ResultEnum.UNAUTHORIZED.getCode(), "账号未登陆，请先登陆再访问");
+    }
     return true;
   }
 
@@ -34,11 +44,7 @@ public class CustomerInterceptor implements HandlerInterceptor {
       HttpServletResponse response,
       Object handler,
       @Nullable ModelAndView modelAndView)
-      throws Exception {
-    System.out.println("postHandle");
-    Long start = (Long) request.getAttribute("startTime");
-    System.out.println("time interceptor 耗时：" + (System.currentTimeMillis() - start) + " 毫秒");
-  }
+      throws Exception {}
 
   @Override
   public void afterCompletion(
@@ -46,10 +52,5 @@ public class CustomerInterceptor implements HandlerInterceptor {
       HttpServletResponse response,
       Object handler,
       @Nullable Exception ex)
-      throws Exception {
-    System.out.println("afterCompletion");
-    Long start = (Long) request.getAttribute("startTime");
-    System.out.println("time interceptor 耗时：" + (System.currentTimeMillis() - start) + " 毫秒");
-    System.out.println("ex is : " + ex);
-  }
+      throws Exception {}
 }

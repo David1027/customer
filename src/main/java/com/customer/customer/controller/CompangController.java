@@ -1,5 +1,7 @@
 package com.customer.customer.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.customer.common.pojo.Result;
 import com.customer.common.utils.ResultUtil;
 import com.customer.customer.service.CompangService;
@@ -9,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +39,7 @@ public class CompangController {
   @PostMapping("save")
   @ApiOperation("新增中介公司")
   public Result save(CompangView compangView) {
-    compangService.save(compangView);
-    return ResultUtil.success();
+    return ResultUtil.success(compangService.save(compangView));
   }
 
   /**

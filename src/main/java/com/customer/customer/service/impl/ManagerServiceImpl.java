@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.customer.common.enums.ResultEnum;
 import com.customer.common.exception.WebMessageException;
@@ -31,6 +32,8 @@ public class ManagerServiceImpl implements ManagerService {
   @Autowired private ManagerDao managerDao;
   @Autowired private CompangDao compangDao;
 
+  private static final String NULL = "null";
+
   private static final String APP_ID = "wx61927abdbaee5455";
   private static final String SECRET = "a2795c557cd97199ed6e6148276fd489";
   private static final String REDIRECT_URI = "/api/common/login/wechat/respon";
@@ -41,7 +44,7 @@ public class ManagerServiceImpl implements ManagerService {
    * @param managerView 实例对象
    */
   @Override
-  public void login(ManagerView managerView) {
+  public void login(ManagerView managerView, HttpSession session) {
     Manager manager = managerDao.findByUsername(managerView.getUsername());
     if (manager == null) {
       throw new WebMessageException(ResultEnum.FAILED.getCode(), "用户名不存在");
@@ -49,6 +52,7 @@ public class ManagerServiceImpl implements ManagerService {
     if (!managerView.getPassword().equals(manager.getPassword())) {
       throw new WebMessageException(ResultEnum.FAILED.getCode(), "密码不匹配");
     }
+    session.setAttribute("login", manager);
   }
 
   /**
@@ -56,11 +60,12 @@ public class ManagerServiceImpl implements ManagerService {
    *
    * @return url
    */
-  private String getServiceConnectUri() {
+  private String getServiceConnectUri(String name) {
     return "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
         + APP_ID
         + "&redirect_uri="
-        + "https://www.shoeslogo.com/vW7s0cZNHmcN3c4i3P3hZZ.php"
+        + "https://www.shoeslogo.com/vW7s0cZNHmcN3c4i3P3hZZ.php?name="
+        + name
         + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
   }
 
@@ -71,8 +76,8 @@ public class ManagerServiceImpl implements ManagerService {
    * @param response 响应参数
    */
   @Override
-  public void loginWeChat(HttpServletRequest request, HttpServletResponse response,String name) {
-    String url = getServiceConnectUri();
+  public void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) {
+    String url = getServiceConnectUri(name);
     try {
       response.sendRedirect(url);
     } catch (IOException e) {
@@ -106,37 +111,25 @@ public class ManagerServiceImpl implements ManagerService {
    * @throws IOException
    */
   @Override
-  public WeChatResult loginCustomer(String code) throws IOException {
+  public WeChatResult loginCustomer(
+      String code, HttpSession session, HttpServletResponse response, String name)
+      throws IOException {
     String openid = getAccessToken(code).getOpenid();
     Compang compang = compangDao.findByCompanyOpenid(openid);
     WeChatResult result = new WeChatResult();
-    if (compang == null) {
+    if ((!NULL.equals(name)) && compang == null) {
       result.setOpenid(openid);
-    } else {
-      result.setCode(true);
-      result.setCompanyId(compang.getId());
-    }
-    return result;
-  }
+      result.setSalesName(name);
+      response.sendRedirect(
+          "http://192.168.40.35/m/register?Openid=" + openid + "&SalesName=" + name);
 
-  /**
-   * 微信授权后的注册逻辑
-   *
-   * @param code 微信授权返回信息
-   * @return
-   * @throws IOException
-   */
-  @Override
-  public WeChatResult registerCustomer(String code) throws IOException {
-    System.err.println("code=======>" + code);
-    String openid = getAccessToken(code).getOpenid();
-    Compang compang = compangDao.findByCompanyOpenid(openid);
-    WeChatResult result = new WeChatResult();
-    if (compang == null) {
-      result.setOpenid(openid);
+    } else if (NULL.equals(name) && compang == null) {
+      result.setCode(false);
+      result.setOpenid("404");
     } else {
       result.setCode(true);
       result.setCompanyId(compang.getId());
+      response.sendRedirect("http://192.168.40.35/m/agentMange?companyId=" + compang.getId());
     }
     return result;
   }

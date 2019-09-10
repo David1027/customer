@@ -1,8 +1,11 @@
 package com.customer.customer.service;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.customer.common.pojo.PageView;
 import com.customer.customer.vo.CompangView;
 
+import org.apache.http.HttpRequest;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -19,7 +22,7 @@ public interface CompangService {
    * @param compangView 实例对象
    * @author: lingjian @Date: 2019/9/5 16:35
    */
-  void save(CompangView compangView);
+  Integer save(CompangView compangView);
 
   /**
    * 多条件分页查询所有数据

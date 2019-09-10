@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.criteria.Predicate;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.customer.common.enums.ResultEnum;
 import com.customer.common.exception.WebMessageException;
@@ -17,6 +19,7 @@ import com.customer.customer.service.CompangService;
 import com.customer.customer.vo.CompangView;
 import com.customer.customer.vo.mapper.CompangMapper;
 
+import org.apache.http.HttpRequest;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,9 +44,10 @@ public class CompangServiceImpl implements CompangService {
    * @param compangView 实例对象
    */
   @Override
-  public void save(CompangView compangView) {
+  public Integer save(CompangView compangView) {
     compangView.setCreateTime(new Date());
-    compangDao.save(compangMapper.modelMapperConfig(false).map(compangView, Compang.class));
+    Compang save = compangDao.save(compangMapper.modelMapperConfig(false).map(compangView, Compang.class));
+    return save.getId();
   }
 
   /**
@@ -80,7 +84,10 @@ public class CompangServiceImpl implements CompangService {
     if (null == compangDao.getCompang(id)) {
       throw new WebMessageException(ResultEnum.FAILED.getCode(), "这个[ " + id + " ]id对应的查询结果不存在");
     }
-    return compangMapper.modelMapperConfig(true).map(compangDao.getCompang(id), CompangView.class);
+    CompangView view =
+        compangMapper.modelMapperConfig(true).map(compangDao.getCompang(id), CompangView.class);
+    view.setCustomerCount(customerDao.countByCompanyId(view.getId()));
+    return view;
   }
 
   /**

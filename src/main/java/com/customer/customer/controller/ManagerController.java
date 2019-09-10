@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2019-09-06 09:27:01
  */
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 @Api(tags = "ManagerController相关api")
 public class ManagerController {
   /** 服务对象 */
@@ -40,8 +40,8 @@ public class ManagerController {
    */
   @PostMapping("/manager/login")
   @ApiOperation("管理员登陆逻辑")
-  public Result login(ManagerView managerView) {
-    managerService.login(managerView);
+  public Result login(ManagerView managerView, HttpSession session) {
+    managerService.login(managerView, session);
     return ResultUtil.success();
   }
 
@@ -54,13 +54,13 @@ public class ManagerController {
    */
   @GetMapping("/manager/loginwechat")
   @ApiOperation("微信账号授权逻辑")
-  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response,String name) {
-    managerService.loginWeChat(request, response,name);
+  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) {
+    managerService.loginWeChat(request, response, name);
     return ResultUtil.success();
   }
 
   /**
-   * 微信账号登陆逻辑
+   * 微信账号注册登陆逻辑
    *
    * @param code 微信授权返回信息
    * @param session
@@ -69,25 +69,10 @@ public class ManagerController {
    * @throws IOException
    */
   @GetMapping("/common/login/wechat/respon")
-  @ApiOperation("微信账号登陆逻辑")
-  public Object loginCustomer(String code, HttpSession session, HttpServletResponse response)
+  @ApiOperation("微信账号注册/登陆逻辑")
+  public Object loginCustomer(
+      String code, HttpSession session, HttpServletResponse response, String name)
       throws IOException {
-    return ResultUtil.success(managerService.loginCustomer(code));
-  }
-
-  /**
-   * 微信账号注册逻辑
-   *
-   * @param code 微信授权返回信息
-   * @param session
-   * @param response
-   * @return
-   * @throws IOException
-   */
-  @GetMapping("registercustomer")
-  @ApiOperation("微信账号注册逻辑")
-  public Object registerCustomer(String code, HttpSession session, HttpServletResponse response)
-      throws IOException {
-    return ResultUtil.success(managerService.registerCustomer(code));
+    return ResultUtil.success(managerService.loginCustomer(code, session, response, name));
   }
 }
