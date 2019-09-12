@@ -56,11 +56,15 @@ public class CustomerServiceImpl implements CustomerService {
         && customerView.getCustomerSignImage() == null) {
       throw new WebMessageException(ResultEnum.FAILED.getCode(), "请上传《客户信息登记表》或《签约合同》");
     }
-    Customer customer =
-        customerDao.findByCustomerNameAndCustomerContact(
-            customerView.getCustomerName(), customerView.getCustomerContact());
-    if (customer != null && !customer.getId().equals(customerView.getId())) {
-      throw new WebMessageException(ResultEnum.FAILED.getCode(), "你所添加的客户，已在平台登记");
+
+    Customer customerName = customerDao.findByCustomerName(customerView.getCustomerName());
+    if (customerName != null && !customerName.getId().equals(customerView.getId())) {
+      throw new WebMessageException(ResultEnum.FAILED.getCode(), "你所添加的客户公司名称，已在平台登记");
+    }
+
+    Customer customerPhone = customerDao.findByCustomerPhone(customerView.getCustomerPhone());
+    if (customerPhone != null && !customerPhone.getId().equals(customerView.getId())) {
+      throw new WebMessageException(ResultEnum.FAILED.getCode(), "你所添加的客户手机，已在平台登记");
     }
   }
 

@@ -27,13 +27,19 @@ public interface CustomerDao
   Customer getCustomer(Integer id);
 
   /**
-   * 根据客户公司名称和客户名称查询记录
-   *
-   * @param name 客户公司名称
-   * @param contact 客户名称
+   * 根据公司名称查询记录
+   * @param name 公司名称
    * @return Customer
    */
-  Customer findByCustomerNameAndCustomerContact(String name, String contact);
+  Customer findByCustomerName(String name);
+
+  /**
+   * 根据客户公司名称和客户名称查询记录
+   *
+   * @param phone 联系人收集
+   * @return Customer
+   */
+  Customer findByCustomerPhone(String phone);
 
   /**
    * 查询companyId的登记数的数量
