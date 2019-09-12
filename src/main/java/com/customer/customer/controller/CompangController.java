@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -56,7 +57,9 @@ public class CompangController {
     @ApiImplicitParam(name = "size", value = "显示条数", required = true, defaultValue = "20")
   })
   public Result selectAll(Integer page, Integer size) {
-    return ResultUtil.success(compangService.listByPage(PageRequest.of(page, size)));
+    return ResultUtil.success(
+        compangService.listByPage(
+            PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "createTime"))));
   }
 
   /**

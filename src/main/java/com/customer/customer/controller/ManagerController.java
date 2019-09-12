@@ -73,6 +73,7 @@ public class ManagerController {
   public Object loginCustomer(
       String code, HttpSession session, HttpServletResponse response, String name)
       throws IOException {
-    return ResultUtil.success(managerService.loginCustomer(code, session, response, name));
+    managerService.loginCustomer(code, session, response, name);
+    return ResultUtil.success();
   }
 }

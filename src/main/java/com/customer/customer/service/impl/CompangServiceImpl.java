@@ -24,6 +24,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -45,8 +46,13 @@ public class CompangServiceImpl implements CompangService {
    */
   @Override
   public Integer save(CompangView compangView) {
+    Integer countOpenid = compangDao.countByCompanyOpenid(compangView.getCompanyOpenid());
+    if (countOpenid > 0) {
+      throw new WebMessageException(ResultEnum.FAILED.getCode(), "此账号已注册");
+    }
     compangView.setCreateTime(new Date());
-    Compang save = compangDao.save(compangMapper.modelMapperConfig(false).map(compangView, Compang.class));
+    Compang save =
+        compangDao.save(compangMapper.modelMapperConfig(false).map(compangView, Compang.class));
     return save.getId();
   }
 

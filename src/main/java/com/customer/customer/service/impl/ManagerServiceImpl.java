@@ -16,7 +16,6 @@ import com.customer.customer.entity.Manager;
 import com.customer.customer.service.ManagerService;
 import com.customer.customer.vo.wechat.AccessToken;
 import com.customer.customer.vo.ManagerView;
-import com.customer.customer.vo.wechat.WeChatResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,9 +33,18 @@ public class ManagerServiceImpl implements ManagerService {
 
   private static final String NULL = "null";
 
+  /** 微信账号的app_id */
   private static final String APP_ID = "wx61927abdbaee5455";
+  /** 微信账号的密钥 */
   private static final String SECRET = "a2795c557cd97199ed6e6148276fd489";
+  /** 微信授权跳转接口 */
   private static final String REDIRECT_URI = "/api/common/login/wechat/respon";
+  /** 注册界面url */
+  private static final String REGISTER_URI = "https://wx.shoeslogo.com/m/register";
+  /** 登陆界面url */
+  private static final String SIGN_URI = "https://wx.shoeslogo.com/m/agentMange";
+  /** 错误界面url */
+  private static final String ERROR_URI = "https://wx.shoeslogo.com/m/errorPage?type=1";
 
   /**
    * 登陆逻辑
@@ -111,26 +119,17 @@ public class ManagerServiceImpl implements ManagerService {
    * @throws IOException
    */
   @Override
-  public WeChatResult loginCustomer(
+  public void loginCustomer(
       String code, HttpSession session, HttpServletResponse response, String name)
       throws IOException {
     String openid = getAccessToken(code).getOpenid();
     Compang compang = compangDao.findByCompanyOpenid(openid);
-    WeChatResult result = new WeChatResult();
     if ((!NULL.equals(name)) && compang == null) {
-      result.setOpenid(openid);
-      result.setSalesName(name);
-      response.sendRedirect(
-          "http://192.168.40.35/m/register?Openid=" + openid + "&SalesName=" + name);
-
+      response.sendRedirect(REGISTER_URI + "?Openid=" + openid + "&SalesName=" + name);
     } else if (NULL.equals(name) && compang == null) {
-      result.setCode(false);
-      result.setOpenid("404");
+      response.sendRedirect(ERROR_URI);
     } else {
-      result.setCode(true);
-      result.setCompanyId(compang.getId());
-      response.sendRedirect("http://192.168.40.35/m/agentMange?companyId=" + compang.getId());
+      response.sendRedirect(SIGN_URI + "?companyId=" + compang.getId());
     }
-    return result;
   }
 }

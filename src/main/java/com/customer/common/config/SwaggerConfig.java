@@ -25,7 +25,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-
   /**
    * 配置docket以配置swagger具体参数 Docket swagger-ui界面信息 apiInfo(apiInfo()) 扫描范围
    * apis(RequestHandlerSelectors.basePackage("com.shoestp.demo")) 正则过滤 paths(PathSelectors.any())

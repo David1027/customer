@@ -31,4 +31,6 @@ public interface CompangDao
    * @return Compang实体类
    */
   Compang findByCompanyOpenid(String openid);
+
+  Integer countByCompanyOpenid(String openid);
 }

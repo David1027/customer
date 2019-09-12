@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -67,7 +68,9 @@ public class CustomerController {
     @ApiImplicitParam(name = "size", value = "显示条数", required = true, defaultValue = "20")
   })
   public Result selectAll(Integer companyId, Integer page, Integer size) {
-    return ResultUtil.success(customerService.listByPage(companyId, PageRequest.of(page, size)));
+    return ResultUtil.success(
+        customerService.listByPage(
+            companyId, PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "createTime"))));
   }
 
   /**

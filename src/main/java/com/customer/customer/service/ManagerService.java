@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.customer.customer.vo.ManagerView;
-import com.customer.customer.vo.wechat.WeChatResult;
 
 /**
  * (Manager)表服务接口
@@ -38,7 +37,6 @@ public interface ManagerService {
    * @param code 微信授权返回信息
    * @throws IOException
    */
-  WeChatResult loginCustomer(
-      String code, HttpSession session, HttpServletResponse response, String name)
+  void loginCustomer(String code, HttpSession session, HttpServletResponse response, String name)
       throws IOException;
 }
