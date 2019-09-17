@@ -1,6 +1,7 @@
 package com.customer.customer.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +30,7 @@ public interface ManagerService {
    * @param request 请求参数
    * @param response 响应参数
    */
-  void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name);
+  void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) throws UnsupportedEncodingException;
 
   /**
    * 微信账号登陆逻辑

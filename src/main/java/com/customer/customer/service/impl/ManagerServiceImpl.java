@@ -1,6 +1,9 @@
 package com.customer.customer.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,9 +37,9 @@ public class ManagerServiceImpl implements ManagerService {
   private static final String NULL = "null";
 
   /** 微信账号的app_id */
-  private static final String APP_ID = "wx61927abdbaee5455";
+  private static final String APP_ID = "wx75d563149f107167";
   /** 微信账号的密钥 */
-  private static final String SECRET = "a2795c557cd97199ed6e6148276fd489";
+  private static final String SECRET = "b06416834ebbbd6f6bc4fccaaeb79e28";
   /** 微信授权跳转接口 */
   private static final String REDIRECT_URI = "/api/common/login/wechat/respon";
   /** 注册界面url */
@@ -68,12 +71,14 @@ public class ManagerServiceImpl implements ManagerService {
    *
    * @return url
    */
-  private String getServiceConnectUri(String name) {
+  private String getServiceConnectUri(String name) throws UnsupportedEncodingException {
     return "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
         + APP_ID
         + "&redirect_uri="
-        + "https://www.shoeslogo.com/vW7s0cZNHmcN3c4i3P3hZZ.php?name="
-        + name
+        + "https://wx.shoeslogo.com/"
+        + REDIRECT_URI
+        + "?name="
+        + (name == null ? name : URLEncoder.encode(name, "UTF-8"))
         + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
   }
 
@@ -84,7 +89,8 @@ public class ManagerServiceImpl implements ManagerService {
    * @param response 响应参数
    */
   @Override
-  public void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) {
+  public void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name)
+      throws UnsupportedEncodingException {
     String url = getServiceConnectUri(name);
     try {
       response.sendRedirect(url);
@@ -125,7 +131,12 @@ public class ManagerServiceImpl implements ManagerService {
     String openid = getAccessToken(code).getOpenid();
     Compang compang = compangDao.findByCompanyOpenid(openid);
     if ((!NULL.equals(name)) && compang == null) {
-      response.sendRedirect(REGISTER_URI + "?Openid=" + openid + "&SalesName=" + name);
+      response.sendRedirect(
+          REGISTER_URI
+              + "?Openid="
+              + openid
+              + "&SalesName="
+              + URLEncoder.encode(URLDecoder.decode(name, "UTF-8"), "UTF-8"));
     } else if (NULL.equals(name) && compang == null) {
       response.sendRedirect(ERROR_URI);
     } else {

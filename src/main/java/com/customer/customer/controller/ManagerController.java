@@ -1,6 +1,7 @@
 package com.customer.customer.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +55,7 @@ public class ManagerController {
    */
   @GetMapping("/manager/loginwechat")
   @ApiOperation("微信账号授权逻辑")
-  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) {
+  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) throws UnsupportedEncodingException {
     managerService.loginWeChat(request, response, name);
     return ResultUtil.success();
   }
