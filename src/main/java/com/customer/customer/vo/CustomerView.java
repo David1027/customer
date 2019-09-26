@@ -30,6 +30,18 @@ public class CustomerView {
   @ApiModelProperty(value = " 客户联系方式")
   private String customerPhone;
 
+  @ApiModelProperty(value = "公司地址")
+  private String customerAddress;
+
+  @ApiModelProperty(value = "企业邮箱")
+  private String customerEmail;
+
+  @ApiModelProperty(value = "鞋企属性")
+  private String customerAttributes;
+
+  @ApiModelProperty(value = "客户产品描述")
+  private String customerDescription;
+
   @ApiModelProperty(value = " 登记上传图片")
   private String customerRegisterImage;
 

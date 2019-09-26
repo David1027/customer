@@ -25,19 +25,39 @@ public interface ManagerService {
   void login(ManagerView managerView, HttpSession session);
 
   /**
-   * 微信账号获取openId
+   * 中介 - 微信账号获取openId
    *
    * @param request 请求参数
    * @param response 响应参数
    */
-  void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) throws UnsupportedEncodingException;
+  void loginWeChat(HttpServletRequest request, HttpServletResponse response, String name)
+      throws UnsupportedEncodingException;
 
   /**
-   * 微信账号登陆逻辑
+   * 中介 - 微信账号登陆逻辑
    *
    * @param code 微信授权返回信息
    * @throws IOException
    */
   void loginCustomer(String code, HttpSession session, HttpServletResponse response, String name)
+      throws IOException;
+
+  /**
+   * 鞋企 - 微信账号获取openId
+   *
+   * @param request 请求参数
+   * @param response 响应参数
+   */
+  void enterpriseLoginWeChat(HttpServletRequest request, HttpServletResponse response, String type)
+      throws UnsupportedEncodingException;
+
+  /**
+   * 鞋企 - 微信账号登陆逻辑
+   *
+   * @param code 微信授权返回信息
+   * @throws IOException
+   */
+  void registerEnterprise(
+      String code, HttpSession session, HttpServletResponse response, String type)
       throws IOException;
 }

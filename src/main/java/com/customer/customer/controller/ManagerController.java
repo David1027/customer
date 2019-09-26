@@ -47,7 +47,7 @@ public class ManagerController {
   }
 
   /**
-   * 微信账号获取openId
+   * 中介 - 微信账号授权获取openId
    *
    * @param request 请求参数
    * @param response 响应参数
@@ -55,13 +55,14 @@ public class ManagerController {
    */
   @GetMapping("/manager/loginwechat")
   @ApiOperation("微信账号授权逻辑")
-  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response, String name) throws UnsupportedEncodingException {
+  public Object loginWeChat(HttpServletRequest request, HttpServletResponse response, String name)
+      throws UnsupportedEncodingException {
     managerService.loginWeChat(request, response, name);
     return ResultUtil.success();
   }
 
   /**
-   * 微信账号注册登陆逻辑
+   * 中介 - 微信账号注册登陆逻辑
    *
    * @param code 微信授权返回信息
    * @param session
@@ -75,6 +76,40 @@ public class ManagerController {
       String code, HttpSession session, HttpServletResponse response, String name)
       throws IOException {
     managerService.loginCustomer(code, session, response, name);
+    return ResultUtil.success();
+  }
+
+  /**
+   * 鞋企 - 微信账号授权获取openId
+   *
+   * @param request 请求参数
+   * @param response 响应参数
+   * @return Result返回结构
+   */
+  @GetMapping("/manager/enterpriseloginwechat")
+  @ApiOperation("微信账号授权逻辑")
+  public Object enterpriseLoginWeChat(
+      HttpServletRequest request, HttpServletResponse response, String type)
+      throws UnsupportedEncodingException {
+    managerService.enterpriseLoginWeChat(request, response, type);
+    return ResultUtil.success();
+  }
+
+  /**
+   * 鞋企 - 微信账号注册登陆逻辑
+   *
+   * @param code 微信授权返回信息
+   * @param session
+   * @param response
+   * @return
+   * @throws IOException
+   */
+  @GetMapping("/common/register/enterprise")
+  @ApiOperation("微信账号注册/登陆逻辑")
+  public Object registerEnterprise(
+      String code, HttpSession session, HttpServletResponse response, String type)
+      throws IOException {
+    managerService.registerEnterprise(code, session, response, type);
     return ResultUtil.success();
   }
 }

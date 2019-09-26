@@ -31,6 +31,18 @@ public class Customer {
   /** 客户联系方式 */
   @Column(name = "customer_phone", nullable = false)
   private String customerPhone;
+  /** 客户公司地址 */
+  @Column(name = "customer_address")
+  private String customerAddress;
+  /** 客户企业邮箱 */
+  @Column(name = "customer_email")
+  private String customerEmail;
+  /** 客户属性 */
+  @Column(name = "customer_attributes", nullable = false)
+  private String customerAttributes;
+  /** 客户产品描述 */
+  @Column(name = "customer_description")
+  private String customerDescription;
   /** 登记上传图片 */
   @Column(name = "customer_register_image")
   private String customerRegisterImage;
