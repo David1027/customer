@@ -10,6 +10,7 @@ import javax.persistence.criteria.Predicate;
 import com.customer.common.enums.ResultEnum;
 import com.customer.common.exception.WebMessageException;
 import com.customer.common.pojo.PageView;
+import com.customer.customer.dao.CustomerDao;
 import com.customer.customer.dao.EnterpriseDao;
 import com.customer.customer.entity.Customer;
 import com.customer.customer.entity.Enterprise;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
  */
 @Service("EnterpriseService")
 public class EnterpriseServiceImpl implements EnterpriseService {
+  @Autowired private CustomerDao customerDao;
   @Autowired private EnterpriseDao enterpriseDao;
   private EnterpriseMapper enterpriseMapper = new EnterpriseMapper();
 
@@ -93,10 +95,6 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     }
     if (enterpriseView.getEnterprisePhone() == null) {
       throw new WebMessageException(ResultEnum.FAILED.getCode(), "请输入正确的联系方式");
-    }
-    if (enterpriseView.getEnterpriseRegisterImage() == null
-        && enterpriseView.getEnterpriseSignImage() == null) {
-      throw new WebMessageException(ResultEnum.FAILED.getCode(), "请上传《客户信息登记表》或《签约合同》");
     }
 
     Enterprise enterpriseName =
